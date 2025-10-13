@@ -36,11 +36,7 @@ st.header("Quality and Integrity of Data")
 
 # -------------------------------------------------- Missing Values -------------------------------------------------- #
 st.subheader("Missing Values")
-missing_practiceaddress2 = len(suppliers[suppliers["practiceaddress2"].isna()])
-missing_specialitieslist = len(suppliers[suppliers["specialitieslist"].isna()])
-missing_providertypelist = len(suppliers[suppliers["providertypelist"].isna()])
-missing_supplieslist = len(suppliers[suppliers["supplieslist"].isna()])
-st.write(f"""In its {len(suppliers)} rows, The Medical Equipment Suppliers dataset has many missing values. The "practiceaddress2" column has {missing_practiceaddress2} missing entries, the "specialitieslist" column has {missing_specialitieslist} missing entries, the "providertypelist" column has {missing_providertypelist} missing entries, and the "supplieslist" column has {missing_supplieslist} missing entries. As you can see in the heatmaps below, almost all of the entries in "practiceaddress2" and "providertypelist" have missing values. However, this does not pose any threat to my analysis. I do not need "providertypelist" for any of my project goals, and I will only need "practiceaddress2" when providing users with information on suppliers matching their needs, where it will be straightforward to pull in the value of "practiceaddress2" if it exists. The missing values in "specialitieslist" and "supplieslist" are more of an issue, as these are two of my main columns of interest. To resolve this issue, since the number of offending rows is so little, I am simply going to drop the rows with missing speciality or supply entries from the dataframe.""")
+st.write(f"""In its {len(suppliers)} rows, The Medical Equipment Suppliers dataset has many missing values. The "practiceaddress2" column has {len(suppliers[suppliers["practiceaddress2"].isna()])} missing entries, the "specialitieslist" column has {len(suppliers[suppliers["specialitieslist"].isna()])} missing entries, the "providertypelist" column has {len(suppliers[suppliers["providertypelist"].isna()])} missing entries, and the "supplieslist" column has {len(suppliers[suppliers["supplieslist"].isna()])} missing entries. As you can see in the heatmaps below, almost all of the entries in "practiceaddress2" and "providertypelist" have missing values. However, this does not pose any threat to my analysis. I do not need "providertypelist" for any of my project goals, and I will only need "practiceaddress2" when providing users with information on suppliers matching their needs, where it will be straightforward to pull in the value of "practiceaddress2" if it exists. The missing values in "specialitieslist" and "supplieslist" are more of an issue, as these are two of my main columns of interest. To resolve this issue, since the number of offending rows is so little, I am simply going to drop the rows with missing speciality or supply entries from the dataframe.""")
 st.write("""The Kaggle dataset has three entries missing values in its 52 rows, a much more manageable number than the last dataset. The variable "Medicaid Enrollment (2013)" has missing values for the rows concerning Connecticut and Maine, and the "State Medicaid Expansion (2016)" is missing a value for the row concerning the entire United States. "State Medicaid Expansion (2013)" having no entry for the U.S. row makes sense, as the U.S. isn"t a state. However, "Medicaid Enrollment (2013)" having missing values is an issue, as that is not a logical omission but rather a hole in the data. To resolve this, I cannot simply drop the offending rows, as there is only one row per state, meaning all of them are essential! I will need to implement an imputation technique to fill in this gap in data for a very important variable.""")
 
 # Create heatmaps to show missing data in each dataset
@@ -77,11 +73,25 @@ st.write("""There is also an interesting data type choice in the Medical Equipme
 # -------------------------------------------------------------------------------------------------------------------- #
 st.divider()
 st.header("Structure and Context of Data")
+
+# --------------------------------------------------- Organization --------------------------------------------------- #
 # TODO: how is the data organized?
+
+# ----------------------------------------------------- Variables ---------------------------------------------------- #
 # TODO: what variables do we have?
+
+# --------------------------------------------------- Relationships -------------------------------------------------- #
 # TODO: what are the relationships between our variables?
+
+# ---------------------------------------------------- Granularity --------------------------------------------------- #
 # TODO: what is the granularity of our observations?
+
+# ------------------------------------------------------ Numbers ----------------------------------------------------- #
 # TODO: what does each number actually represent?
+
+
+
+
 
 # Rename misspelled acceptsassignement column, reformat columns for clean appearance in web app
 suppliers.rename(columns = {"acceptsassignement": "Accepts Assignment"})
@@ -95,20 +105,6 @@ split_suppliers = split_suppliers.dropna(subset = ["specialitieslist", "supplies
 # Break up each entry in columns of interest into lists, splitting on vertical bars
 split_suppliers["specialitieslist"] = split_suppliers["specialitieslist"].str.split("|")
 split_suppliers["supplieslist"] = split_suppliers["supplieslist"].str.split("|")
-
-# Construct set of all unique specialities in dataset
-specialities = set()
-for row in split_suppliers.itertuples():
-    row_specialities = row.specialitieslist
-    for supply in row_specialities:
-        specialities.add(supply)
-
-# Construct set of all unique supplies in dataset
-supplies = set()
-for row in split_suppliers.itertuples():
-    row_supplies = row.supplieslist
-    for supply in row_supplies:
-        supplies.add(supply)
 
 # Use MultiLabelBinarizer to one-hot encode columns of interest, concatenate with original data
 # Note: This code block was generated with assistance from ChatGPT (Version 5), accessed on 10/13/2025
@@ -124,6 +120,9 @@ encoded_supplies = pd.DataFrame(
     index = split_suppliers.index
 )
 suppliers_encoded = pd.concat([split_suppliers, encoded_specialities, encoded_supplies], axis = 1)
+
+
+
 
 
 # -------------------------------------------------------------------------------------------------------------------- #
