@@ -1,0 +1,8 @@
+States dataset from Kaggle: 52 entries, one for each state + DC and U.S. overall
+- missing entry for US overall: State Medicaid Expansion (2016)
+- missing entry for Maine and Connecticut: Medicaid Enrollment (2013)
+
+Providers dataset from CMS
+- more missing entries
+- massive missingness (majority of data) from practiceaddress2 and providertypelist
+- more minor missigness from specialitieslist and supplieslist (less than 1,000 entries out of 58,857)
