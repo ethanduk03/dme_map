@@ -7,15 +7,16 @@ suppliers = pd.read_excel("Data/MedicalEquipmentSuppliers.xls")
 accepted = suppliers[suppliers["acceptsassignement"] == True]
 
 st.title("Map of DME Suppliers Accepting Assignment")
-#st.map(accepted, latitude="latitude", longitude="longitude")
-#map = px.scatter_geo(accepted, lat="latitude", lon="longitude")
-#st.plotly_chart(map)
 
 map = px.scatter_map(suppliers,
-                        lat=suppliers.latitude,
-                        lon=suppliers.longitude,
-                        hover_name="practicename",
-                        hover_data=["practicecity", "practicestate"],
-                        color="acceptsassignement",
-                        zoom=1)
+                    lat = suppliers.latitude,
+                    lon = suppliers.longitude,
+                    hover_name = "practicename",
+                    hover_data = ["practicecity", "practicestate"],
+                    color = "acceptsassignement",
+                    color_discrete_map = {0: "IndianRed", 1: "Green"},
+                    map_style = "carto-darkmatter",
+                    zoom = 2.5,
+                    width = 1400,
+                    height = 800)
 st.plotly_chart(map)
