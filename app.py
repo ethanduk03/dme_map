@@ -79,7 +79,9 @@ if "encoded_suppliers" not in st.session_state:
 
 st.set_page_config(layout = "wide")
 
-home_page = st.Page("home.py", title = "Home")
+# Overview
+context_page = st.Page("context.py", title = "Context")
+goals_page = st.Page("goals.py", title = "Project Goals")
 
 # IDA
 collection_page = st.Page("collection.py", title = "Data Collection")
@@ -89,9 +91,13 @@ duplicates_page = st.Page("duplicates.py", title = "Duplicated Data")
 # EDA
 eda_page = st.Page("eda.py", title = "Exploratory Data Analysis")
 
-# MAP
+# Results
 map_page = st.Page("map.py", title = "Map")
 
-pg = st.navigation([home_page, collection_page, missing_page, duplicates_page, eda_page, map_page])
-
+pg = st.navigation({
+    "Overview": [context_page, goals_page],
+    "IDA": [collection_page, missing_page, duplicates_page],
+    "EDA": [eda_page],
+    "Results": [map_page]
+})
 pg.run()

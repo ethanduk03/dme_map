@@ -12,7 +12,7 @@ clean_states = st.session_state.clean_states
 #                                                     Data Structure
 # -------------------------------------------------------------------------------------------------------------------- #
 st.divider()
-st.header("Data Structure")
+st.header("Dataset Structure")
 
 # --------------------------------------------------- Organization --------------------------------------------------- #
 # TODO: how is the data organized?

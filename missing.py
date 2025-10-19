@@ -22,8 +22,8 @@ states[["State", "State Medicaid Expansion (2016)", "Medicaid Enrollment (2013)"
 
 # Create heatmaps to show missing data in each dataset
 fig, axes = plt.subplots(1, 2, figsize = (35, 15))
-sns.heatmap(suppliers.isna().transpose(), cmap = "magma", ax = axes[0])
-sns.heatmap(states.isna().transpose(), cmap = "magma", ax = axes[1])
+sns.heatmap(suppliers.isna().transpose(), cmap = "viridis", ax = axes[0])
+sns.heatmap(states.isna().transpose(), cmap = "viridis", ax = axes[1])
 st.pyplot(fig)
 
 st.write("""Now that I know this missingness exists, I need to address it. In the Medical Equipment Suppliers dataset, I determined that "practiceaddress2" will be fine as it is, and that "providertypelist" is irrelevant to the project goal. However, the missingness in "specialitieslist" and "supplieslist" is more of an issue. Since this is the most important information I would want from an entry in this dataset, an entry where one of these pieces of information is not valuable to me. Additionally, its categorical nature makes it very difficult to impute, or fill in, this missing data. Therefore, since these offending entries make up such a small percentage of the dataset, I will simply drop them from the dataset, getting rid of any entries with missingness in these columns.""")

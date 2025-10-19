@@ -5,15 +5,13 @@ import streamlit as st
 encoded_suppliers = st.session_state.encoded_suppliers
 st.title("Map of DME Suppliers Accepting Assignment")
 
-
-
-
 selected_specialities = ["Pharmacy"]
 selected_supplies = []
 
 selected_suppliers = encoded_suppliers.copy(deep = True)
 if len(selected_specialities):
     selected_suppliers = selected_suppliers[selected_suppliers[selected_specialities[0]] == True]
+
 
 map = px.scatter_map(selected_suppliers,
                     lat = "latitude",
