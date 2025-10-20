@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 
 # -------------------------------------------------------------------------------------------------------------------- #
-#                           Create datasets and save to session_state for use in other pages                           #
+#                                               Main Streamlit code file                                               #
 # -------------------------------------------------------------------------------------------------------------------- #
 
 # ------------------------------------ Load original suppliers and states datasets, save to session_state ----------------------------------- #
@@ -22,6 +22,7 @@ states = st.session_state.states
 clean_suppliers = suppliers.copy(deep = True)
 clean_suppliers = clean_suppliers.dropna(subset = ["specialitieslist", "supplieslist"]).reset_index(drop = True)
 
+# Perform regression imputation on missing values
 clean_states = states.copy(deep = True)
 X = clean_states[["Medicaid Enrollment (2016)", "Medicare Enrollment (2016)"]]
 y = clean_states["Medicaid Enrollment (2013)"]
@@ -37,6 +38,7 @@ clean_states.loc[19, "Medicaid Enrollment (2013)"] = int(y_pred[1])
 clean_states.loc[6, "Medicaid Enrollment Change (2013-2016)"] = clean_states.loc[6, "Medicaid Enrollment (2016)"] - clean_states.loc[6, "Medicaid Enrollment (2013)"]
 clean_states.loc[19, "Medicaid Enrollment Change (2013-2016)"] = clean_states.loc[19, "Medicaid Enrollment (2016)"] - clean_states.loc[19, "Medicaid Enrollment (2013)"]
 
+# Data type modification
 clean_states["State"] = clean_states["State"].str.strip()
 clean_states["Uninsured Rate (2010)"] = clean_states["Uninsured Rate (2010)"].str.rstrip("%").astype("float") / 100.0
 clean_states["Uninsured Rate (2015)"] = clean_states["Uninsured Rate (2015)"].str.rstrip("%").astype("float") / 100.0
@@ -46,6 +48,7 @@ clean_states["Average Monthly Tax Credit (2016)"] = clean_states["Average Monthl
 clean_states["Medicaid Enrollment (2013)"] = clean_states["Medicaid Enrollment (2013)"].astype("int")
 clean_states["Medicaid Enrollment Change (2013-2016)"] = clean_states["Medicaid Enrollment Change (2013-2016)"].astype("int")
 
+# Save cleaned datasets to session_state
 if "clean_suppliers" not in st.session_state:
     st.session_state.clean_suppliers = clean_suppliers
 if "clean_states" not in st.session_state:
@@ -81,6 +84,7 @@ encoded_suppliers = pd.concat([split_suppliers, encoded_specialities, encoded_su
 if "encoded_suppliers" not in st.session_state:
     st.session_state.encoded_suppliers = encoded_suppliers
 
+# ----------------------- Create new state supplier count columns for Health Insurance Coverage ---------------------- #
 state_abbrevs = {
     "AK": "Alaska",
     "AL": "Alabama",
@@ -184,9 +188,7 @@ for i in range(len(eda_states)):
 st.session_state.eda_states = eda_states
 
 
-# -------------------------------------------------------------------------------------------------------------------- #
-#                                                   Streamlit styling                                                  #
-# -------------------------------------------------------------------------------------------------------------------- #
+# ------------------------------------------------- Streamlit styling ------------------------------------------------ #
 
 st.set_page_config(layout = "wide")
 

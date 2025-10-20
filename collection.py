@@ -1,6 +1,8 @@
 # Import necessary libraries
 import streamlit as st
 
+# ----------------------------------------------- IDA: Data Collection ----------------------------------------------- #
+
 st.header("Data Collection")
 st.write("""This project utilizes two datasets, the [Medical Equipment Suppliers](https://data.cms.gov/provider-data/dataset/ct36-nrcq#overview) dataset from Data.CMS.gov and the [Health Insurance Coverage](https://www.kaggle.com/datasets/hhs/health-insurance) dataset from Kaggle.""")
 

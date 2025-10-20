@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 
+# ------------------------------------------------- IDA: Missing data ------------------------------------------------ #
+
 # Load data from session_state
 suppliers = st.session_state.suppliers
 states = st.session_state.states
@@ -11,6 +13,7 @@ states = st.session_state.states
 st.subheader("Missing Values")
 st.write(f"""In its {len(suppliers)} rows, The Medical Equipment Suppliers dataset has many missing values. The "practiceaddress2" column has {len(suppliers[suppliers["practiceaddress2"].isna()])} missing entries, the "specialitieslist" column has {len(suppliers[suppliers["specialitieslist"].isna()])} missing entries, the "providertypelist" column has {len(suppliers[suppliers["providertypelist"].isna()])} missing entries, and the "supplieslist" column has {len(suppliers[suppliers["supplieslist"].isna()])} missing entries. As you can see in the heatmaps below, almost all of the entries in "practiceaddress2" and "providertypelist" have missing values. However, this does not pose any threat to my analysis. I do not need "providertypelist" for any of my project goals, and I will only need "practiceaddress2" when providing users with locational information on suppliers matching their needs, where it will be straightforward to pull in the value of "practiceaddress2" if it exists. However the missing values in "specialitieslist" and "supplieslist" are more of an issue, as these are two of my main columns of interest.""")
 
+# List of columns with missing data, write info from these columns to output buffer (.info goes to terminal)
 missing_cols = ["practiceaddress2", "specialitieslist", "providertypelist", "supplieslist"]
 buffer = io.StringIO()
 suppliers[missing_cols].info(buf = buffer)
@@ -35,6 +38,7 @@ st.write("""For the Health Insurance Coverage dataset, I determined that the mis
 clean_states = st.session_state["clean_states"]
 st.write("""As you can see in the tables below, we have fixed the missingness in our data, and can proceed to the next step of our quality checks: looking for duplicate entries.""")
 
+# Output same tables to show differences after cleaning missing values
 col1, col2 = st.columns([1, 2])
 with col1:
     missing_cols = ["specialitieslist", "supplieslist"]
