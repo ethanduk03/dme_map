@@ -1,4 +1,5 @@
 # Import necessary libraries
+from datetime import datetime
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MultiLabelBinarizer
 import pandas as pd
@@ -80,6 +81,108 @@ encoded_suppliers = pd.concat([split_suppliers, encoded_specialities, encoded_su
 if "encoded_suppliers" not in st.session_state:
     st.session_state.encoded_suppliers = encoded_suppliers
 
+state_abbrevs = {
+    "AK": "Alaska",
+    "AL": "Alabama",
+    "AR": "Arkansas",
+    "AZ": "Arizona",
+    "CA": "California",
+    "CO": "Colorado",
+    "CT": "Connecticut",
+    "DC": "District of Columbia",
+    "DE": "Delaware",
+    "FL": "Florida",
+    "GA": "Georgia",
+    "HI": "Hawaii",
+    "IA": "Iowa",
+    "ID": "Idaho",
+    "IL": "Illinois",
+    "IN": "Indiana",
+    "KS": "Kansas",
+    "KY": "Kentucky",
+    "LA": "Louisiana",
+    "MA": "Massachusetts",
+    "MD": "Maryland",
+    "ME": "Maine",
+    "MI": "Michigan",
+    "MN": "Minnesota",
+    "MO": "Missouri",
+    "MS": "Mississippi",
+    "MT": "Montana",
+    "NC": "North Carolina",
+    "ND": "North Dakota",
+    "NE": "Nebraska",
+    "NH": "New Hampshire",
+    "NJ": "New Jersey",
+    "NM": "New Mexico",
+    "NV": "Nevada",
+    "NY": "New York",
+    "OH": "Ohio",
+    "OK": "Oklahoma",
+    "OR": "Oregon",
+    "PA": "Pennsylvania",
+    "RI": "Rhode Island",
+    "SC": "South Carolina",
+    "SD": "South Dakota",
+    "TN": "Tennessee",
+    "TX": "Texas",
+    "UT": "Utah",
+    "VA": "Virginia",
+    "VT": "Vermont",
+    "WA": "Washington",
+    "WI": "Wisconsin",
+    "WV": "West Virginia",
+    "WY": "Wyoming"
+    }
+
+supplier_state_counts = {}
+assigned_supplier_state_counts = {}
+nonassigned_supplier_state_counts = {}
+
+begin_date = datetime(2010, 1, 1)
+end_date = datetime(2016, 12, 31)
+
+for i in range(len(encoded_suppliers)):
+    state = encoded_suppliers.loc[i, "practicestate"]
+    if state in state_abbrevs.keys() and encoded_suppliers.loc[i, "participationbegindate"] >= begin_date and encoded_suppliers.loc[i, "participationbegindate"] <= end_date:
+        full_state = state_abbrevs[state]
+        if full_state not in supplier_state_counts.keys():
+            supplier_state_counts[full_state] = 1
+            if encoded_suppliers.loc[i, "acceptsassignement"]:
+                if full_state not in assigned_supplier_state_counts.keys():
+                    assigned_supplier_state_counts[full_state] = 1
+                else:
+                    assigned_supplier_state_counts[full_state] += 1
+            else:
+                if full_state not in nonassigned_supplier_state_counts.keys():
+                    nonassigned_supplier_state_counts[full_state] = 1
+                else:
+                    nonassigned_supplier_state_counts[full_state] += 1
+        else:
+            supplier_state_counts[full_state] += 1
+            if encoded_suppliers.loc[i, "acceptsassignement"]:
+                if full_state not in assigned_supplier_state_counts.keys():
+                    assigned_supplier_state_counts[full_state] = 1
+                else:
+                    assigned_supplier_state_counts[full_state] += 1
+            else:
+                if full_state not in nonassigned_supplier_state_counts.keys():
+                    nonassigned_supplier_state_counts[full_state] = 1
+                else:
+                    nonassigned_supplier_state_counts[full_state] += 1
+                    
+eda_states = clean_states.copy(deep = True)
+
+for i in range(len(eda_states)):
+    state = eda_states.loc[i, "State"]
+    if state in supplier_state_counts.keys():
+        eda_states.loc[i, "Supplier Count (2010-2016)"] = int(supplier_state_counts[state])
+        eda_states.loc[i, "Assignment-Accepting Supplier Count (2010-2016)"] = int(assigned_supplier_state_counts[state])
+        eda_states.loc[i, "Assignment-Rejecting Supplier Count (2010-2016)"] = int(nonassigned_supplier_state_counts[state])
+        eda_states.loc[i, "Assignment Acceptance Ratio"] = float(assigned_supplier_state_counts[state]) / nonassigned_supplier_state_counts[state]
+        
+st.session_state.eda_states = eda_states
+
 
 # -------------------------------------------------------------------------------------------------------------------- #
 #                                                   Streamlit styling                                                  #
@@ -88,8 +191,7 @@ if "encoded_suppliers" not in st.session_state:
 st.set_page_config(layout = "wide")
 
 # Overview
-context_page = st.Page("context.py", title = "Context")
-goals_page = st.Page("goals.py", title = "Project Goals")
+context_page = st.Page("context.py", title = "Context and Project Goals")
 
 # IDA
 collection_page = st.Page("collection.py", title = "Data Collection")
@@ -106,7 +208,7 @@ variables_page = st.Page("variables.py", title = "Key Variables")
 map_page = st.Page("map.py", title = "Map")
 
 pg = st.navigation({
-    "Overview": [context_page, goals_page],
+    "Overview": [context_page],
     "IDA": [collection_page, missing_page, duplicates_page, structure_page],
     "EDA": [combinations_page, supplier_states_page, variables_page],
     "Results": [map_page]
