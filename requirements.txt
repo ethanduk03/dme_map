@@ -79,7 +79,7 @@ lark==1.2.2
 lazy_loader==0.4
 llvmlite==0.45.0
 locket==1.0.0
-lxml==4.9.4
+lxml>=5.2.0
 MarkupSafe==3.0.2
 matplotlib==3.10.6
 matplotlib-inline==0.1.7
