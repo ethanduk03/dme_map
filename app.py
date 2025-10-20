@@ -36,11 +36,19 @@ clean_states.loc[19, "Medicaid Enrollment (2013)"] = int(y_pred[1])
 clean_states.loc[6, "Medicaid Enrollment Change (2013-2016)"] = clean_states.loc[6, "Medicaid Enrollment (2016)"] - clean_states.loc[6, "Medicaid Enrollment (2013)"]
 clean_states.loc[19, "Medicaid Enrollment Change (2013-2016)"] = clean_states.loc[19, "Medicaid Enrollment (2016)"] - clean_states.loc[19, "Medicaid Enrollment (2013)"]
 
+clean_states["State"] = clean_states["State"].str.strip()
+clean_states["Uninsured Rate (2010)"] = clean_states["Uninsured Rate (2010)"].str.rstrip("%").astype("float") / 100.0
+clean_states["Uninsured Rate (2015)"] = clean_states["Uninsured Rate (2015)"].str.rstrip("%").astype("float") / 100.0
+clean_states["Uninsured Rate Change (2010-2015)"] = clean_states["Uninsured Rate Change (2010-2015)"].str.rstrip()
+clean_states["Uninsured Rate Change (2010-2015)"] = clean_states["Uninsured Rate Change (2010-2015)"].str.rstrip("%").astype("float") / 100.0
+clean_states["Average Monthly Tax Credit (2016)"] = clean_states["Average Monthly Tax Credit (2016)"].str.lstrip("$").astype("int")
+clean_states["Medicaid Enrollment (2013)"] = clean_states["Medicaid Enrollment (2013)"].astype("int")
+clean_states["Medicaid Enrollment Change (2013-2016)"] = clean_states["Medicaid Enrollment Change (2013-2016)"].astype("int")
+
 if "clean_suppliers" not in st.session_state:
     st.session_state.clean_suppliers = clean_suppliers
 if "clean_states" not in st.session_state:
     st.session_state.clean_states = clean_states
-
 
 # ---------------- Copy cleaned datasets, restructure and better organize data, save to session_state ---------------- #
 
@@ -87,17 +95,20 @@ goals_page = st.Page("goals.py", title = "Project Goals")
 collection_page = st.Page("collection.py", title = "Data Collection")
 missing_page = st.Page("missing.py", title = "Missing Data")
 duplicates_page = st.Page("duplicates.py", title = "Duplicated Data")
+structure_page = st.Page("structure.py", title = "Dataset Structure")
 
 # EDA
-eda_page = st.Page("eda.py", title = "Exploratory Data Analysis")
+combinations_page = st.Page("combinations.py", title = "Speciality and Supply Combinations")
+supplier_states_page = st.Page("supplier_states.py", title = "Suppliers by State")
+variables_page = st.Page("variables.py", title = "Key Variables")
 
 # Results
 map_page = st.Page("map.py", title = "Map")
 
 pg = st.navigation({
     "Overview": [context_page, goals_page],
-    "IDA": [collection_page, missing_page, duplicates_page],
-    "EDA": [eda_page],
+    "IDA": [collection_page, missing_page, duplicates_page, structure_page],
+    "EDA": [combinations_page, supplier_states_page, variables_page],
     "Results": [map_page]
 })
 pg.run()
