@@ -9,13 +9,32 @@ encoded_suppliers = st.session_state.encoded_suppliers
 st.title("Map of DME Suppliers Accepting Assignment")
 
 
-# Framework for adding in subsetting later in project, for final submission
-selected_specialities = []
-selected_supplies = []
+
+# Iterate through datasets to get lists of unique specialities and supplies in the dataset
+specialities = set()
+for row in encoded_suppliers.itertuples():
+    row_specialities = row.specialitieslist
+    for supply in row_specialities:
+        specialities.add(supply)
+specialities = sorted(list(specialities))
+        
+supplies = set()
+for row in encoded_suppliers.itertuples():
+    row_supplies = row.supplieslist
+    for supply in row_supplies:
+        supplies.add(supply)
+supplies = sorted(list(supplies))
+
+chosen_speciality = st.selectbox("Specialities", list(specialities))
+chosen_supply = st.selectbox("Supplies", list(supplies))
 
 selected_suppliers = encoded_suppliers.copy(deep = True)
-if len(selected_specialities):
-    selected_suppliers = selected_suppliers[selected_suppliers[selected_specialities[0]] == True]
+    
+if chosen_speciality != "All":
+    selected_suppliers = selected_suppliers[selected_suppliers['specialitieslist'].apply(lambda x: chosen_speciality in x)]
+
+if chosen_supply != "All":
+    selected_suppliers = selected_suppliers[selected_suppliers['supplieslist'].apply(lambda x: chosen_supply in x)]
 
 # Create map using lat/long, add hover interactivity to display locational information and specialities
 map = px.scatter_map(selected_suppliers,

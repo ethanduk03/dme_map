@@ -208,6 +208,7 @@ structure_page = st.Page("structure.py", title = "Dataset Structure")
 combinations_page = st.Page("combinations.py", title = "Speciality and Supply Combinations")
 supplier_states_page = st.Page("supplier_states.py", title = "Suppliers by State")
 variables_page = st.Page("variables.py", title = "Key Variables")
+integration_page = st.Page("integration.py", title = "Integration and Insights")
 
 # Results
 map_page = st.Page("map.py", title = "Map")
@@ -216,7 +217,7 @@ model_page = st.Page("model.py", title = "Model")
 pg = st.navigation({
     "Overview": [context_page],
     "IDA": [collection_page, missing_page, duplicates_page, structure_page],
-    "EDA": [combinations_page, supplier_states_page, variables_page],
+    "EDA": [combinations_page, supplier_states_page, variables_page, integration_page],
     "Results": [map_page, model_page]
 })
 pg.run()
