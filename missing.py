@@ -9,6 +9,7 @@ import streamlit as st
 # Load data from session_state
 suppliers = st.session_state.suppliers
 states = st.session_state.states
+years = st.session_state.years
 
 st.subheader("Missing Values")
 st.write(f"""In its {len(suppliers)} rows, The Medical Equipment Suppliers dataset has many missing values. The "practiceaddress2" column has {len(suppliers[suppliers["practiceaddress2"].isna()])} missing entries, the "specialitieslist" column has {len(suppliers[suppliers["specialitieslist"].isna()])} missing entries, the "providertypelist" column has {len(suppliers[suppliers["providertypelist"].isna()])} missing entries, and the "supplieslist" column has {len(suppliers[suppliers["supplieslist"].isna()])} missing entries. As you can see in the heatmaps below, almost all of the entries in "practiceaddress2" and "providertypelist" have missing values. However, this does not pose any threat to my analysis. I do not need "providertypelist" for any of my project goals, and I will only need "practiceaddress2" when providing users with locational information on suppliers matching their needs, where it will be straightforward to pull in the value of "practiceaddress2" if it exists. However the missing values in "specialitieslist" and "supplieslist" are more of an issue, as these are two of my main columns of interest.""")

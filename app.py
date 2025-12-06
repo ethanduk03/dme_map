@@ -14,9 +14,12 @@ if "suppliers" not in st.session_state:
     st.session_state.suppliers = pd.read_excel("Data/MedicalEquipmentSuppliers.xls")
 if "states" not in st.session_state:
     st.session_state.states = pd.read_csv("Data/states.csv")
+if "years" not in st.session_state:
+    st.session_state.years = pd.read_excel("Data/years.xlsx")
     
 suppliers = st.session_state.suppliers
 states = st.session_state.states
+years = st.session_state.years
     
 # ---------------------- Copy original datasets, perform data cleaning and save to session_state --------------------- #
 clean_suppliers = suppliers.copy(deep = True)
@@ -208,11 +211,12 @@ variables_page = st.Page("variables.py", title = "Key Variables")
 
 # Results
 map_page = st.Page("map.py", title = "Map")
+model_page = st.Page("model.py", title = "Model")
 
 pg = st.navigation({
     "Overview": [context_page],
     "IDA": [collection_page, missing_page, duplicates_page, structure_page],
     "EDA": [combinations_page, supplier_states_page, variables_page],
-    "Results": [map_page]
+    "Results": [map_page, model_page]
 })
 pg.run()
